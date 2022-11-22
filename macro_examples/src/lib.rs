@@ -61,3 +61,8 @@ pub fn declare_variables(items: TokenStream) -> TokenStream {
         }
     )
 }
+
+#[proc_macro_attribute]
+pub fn clear(_attr: TokenStream, _item: TokenStream) -> TokenStream {
+    TokenStream::new()
+}
