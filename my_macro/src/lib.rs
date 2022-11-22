@@ -37,10 +37,7 @@ pub fn make_answer(items: TokenStream) -> TokenStream {
 pub fn declare_variables(items: TokenStream) -> TokenStream {
 
     fn is_comma(item: &TokenTree) -> bool {
-        match item {
-            TokenTree::Punct(p) => p.as_char() == ',',
-            _ => false
-        }
+        matches!(item, TokenTree::Punct(p) if p.as_char() == ',')
     }
 
     items
