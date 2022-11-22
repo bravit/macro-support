@@ -13,37 +13,43 @@ pub fn make_answer(items: TokenStream) -> TokenStream {
     format!("fn answer() -> u32 {{ {} }}", answer).parse().unwrap()
 }
 
-fn is_comma(item: &TokenTree) -> bool {
-    match item {
-        TokenTree::Punct(p) => p.as_char() == ',',
-        _ => false
-    }
-}
-
 #[proc_macro]
 pub fn declare_variables(items: TokenStream) -> TokenStream {
-    let decl_groups = items.clone().into_iter().group_by(is_comma);
-    let declarations = decl_groups.into_iter()
-        .filter_map(|(comma, group)| if comma { None } else { Some(group) } );
 
-    let mut result = TokenStream::new();
-    for mut in_decl in declarations {
-        let variable = in_decl.next().unwrap();
-
-        let value = if let Some(_) = in_decl.next() { // declares some value
-            in_decl.next().unwrap()
-        } else {
-            Literal::u8_unsuffixed(0).into() // default value
-        };
-
-        result.extend([
-            Ident::new("let", Span::mixed_site()).into(),
-            variable,
-            Punct::new('=', Spacing::Alone).into(),
-            value,
-            Punct::new(';', Spacing::Alone).into()
-        ]);
+    fn is_comma(item: &TokenTree) -> bool {
+        match item {
+            TokenTree::Punct(p) => p.as_char() == ',',
+            _ => false
+        }
     }
 
-    result
+    items
+        .into_iter()
+        .group_by(is_comma)
+        .into_iter()
+        .filter_map(|(comma, group)| if comma { None } else { Some(group) } )
+        .fold(TokenStream::new(), |mut tokens, mut decl| {
+
+            let variable = decl.next().unwrap();
+
+            let value =
+                if decl.next().is_some() { // contains some value
+                    decl.next().unwrap_or_else(
+                        || panic!("The expected syntax for a declaration is: 'variable = value' OR 'variable'")
+                    )
+                } else {
+                    Literal::u8_unsuffixed(0).into() // default value
+                };
+
+            tokens.extend([
+                Ident::new("let", Span::mixed_site()).into(),
+                variable,
+                Punct::new('=', Spacing::Alone).into(),
+                value,
+                Punct::new(';', Spacing::Alone).into()
+            ]);
+
+            tokens
+        }
+    )
 }
