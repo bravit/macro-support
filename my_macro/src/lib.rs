@@ -3,6 +3,26 @@ extern crate proc_macro;
 use proc_macro::{Ident, Punct, Literal, Spacing, Span, TokenStream, TokenTree};
 use itertools::Itertools;
 
+
+#[proc_macro_derive(NameFn)]
+pub fn derive_name_fn(items: TokenStream) -> TokenStream {
+
+    fn ident_name(item: TokenTree) -> String {
+        match item {
+            TokenTree::Ident(i) => i.to_string(),
+            _ => panic!("Not an ident")
+        }
+    }
+
+    let item_name = ident_name(items.into_iter().nth(1).unwrap());
+
+    format!("impl Name for {} {{
+    fn name() -> String {{
+        \"{}\".to_string()
+    }}
+}}", item_name, item_name).parse().unwrap()
+}
+
 #[proc_macro]
 pub fn make_answer(items: TokenStream) -> TokenStream {
     let answer = if items.is_empty() {

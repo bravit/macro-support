@@ -1,9 +1,14 @@
-use my_macro::{make_answer, declare_variables};
+use my_macro::{NameFn, declare_variables};
 
-make_answer!(1 + 2);
+trait Name {
+    fn name() -> String;
+}
+
+#[derive(NameFn)]
+struct Info;
 
 fn main() {
-    println!("{}", answer());
+    println!("Named item: {}", Info::name());
 
     declare_variables! {
         a = 'z',
