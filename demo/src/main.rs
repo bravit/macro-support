@@ -7,8 +7,12 @@ trait Name {
 #[derive(NameFn)]
 struct Info;
 
+#[derive(NameFn)]
+enum Bool3 { True, False, Unknown }
+
 fn main() {
     println!("Named item: {}", Info::name());
+    println!("Named item: {}", Bool3::name());
 
     declare_variables! {
         a = 'z',
