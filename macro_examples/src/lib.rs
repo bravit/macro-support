@@ -48,9 +48,10 @@ pub fn declare_variables(items: TokenStream) -> TokenStream {
                     Literal::u8_unsuffixed(0).into() // default value
                 };
 
-            tokens.extend([
+            tokens.extend([ // construct a new let-declaration
                 Ident::new("let", Span::mixed_site()).into(),
-                variable,
+                variable, // comes from input
+                // Ident::new(variable.to_string().as_str(), Span::call_site()).into(),
                 Punct::new('=', Spacing::Alone).into(),
                 value,
                 Punct::new(';', Spacing::Alone).into()
