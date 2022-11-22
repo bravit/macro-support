@@ -15,11 +15,11 @@ fn main() {
     println!("Named item: {}", Bool3::name());
 
     declare_variables! {
-        a = 'z',
+        a = 'a',
         b = 2,
         c = a,
-        d,
-        e = "some string"
+        d, // will be defaulted to 0
+        e = "e"
     }
     println!("a = {}", a);
     println!("b = {}", b);
