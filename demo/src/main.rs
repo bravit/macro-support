@@ -1,4 +1,4 @@
-use my_macro::{NameFn, declare_variables};
+use macro_examples::{NameFn, declare_variables};
 
 trait Name {
     fn name() -> String;
