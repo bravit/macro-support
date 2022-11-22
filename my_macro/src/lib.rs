@@ -24,16 +24,6 @@ pub fn derive_name_fn(items: TokenStream) -> TokenStream {
 }
 
 #[proc_macro]
-pub fn make_answer(items: TokenStream) -> TokenStream {
-    let answer = if items.is_empty() {
-        String::from("42")
-    } else {
-        items.to_string()
-    };
-    format!("fn answer() -> u32 {{ {} }}", answer).parse().unwrap()
-}
-
-#[proc_macro]
 pub fn declare_variables(items: TokenStream) -> TokenStream {
 
     fn is_comma(item: &TokenTree) -> bool {
